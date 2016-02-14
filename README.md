@@ -50,13 +50,13 @@ Playground for adding authentication to Node.js site
 * Add links to .ejs page
 
 
-##Twitter
+###Twitter
 * Install passport-twitter
 * Go to https://dev.twitter.com/
 * Tools / Manage your apps
 * Code Twitter strategy like Google
 
-##Facebook
+###Facebook
 * Install passport-facebook
 * Make facebook.strategy
 * Add routes to auth.js
@@ -67,16 +67,33 @@ Playground for adding authentication to Node.js site
 * Call facebook.strategy.js from passport.js
 * Add facebook li to index.ejs
 
-##GitHub
+###GitHub
 * Install passport-github
 * Goto https://github.com/settings/applications/new
 * Do steps in "Adding a new Startegy"
 
-##LinkedIn
+###LinkedIn
 * Install passport-linkedin
 * Goto https://developer.linkedin.com/
 * Need to provide a logo, WTF??!?? Waste of my time!!
 * Do steps in "Adding a new Startegy"
+
+##Calling OAuth Providers
+Call Strategy providers
+
+###Persisitng users
+1. Install MongoDB and run mongod
+2. Install Mongoose
+3. Make Mongoose model in models dir
+4. User Schema has displayName, image and email string properties, and all Strategires as object properties.
+5. Add user model to all Startegies, finding and saving
+
+###Connect all Social Media for a User
+1. Show all Startegies on User Page
+2. Fix routes to send the whole user object
+
+
+
 
 
 	

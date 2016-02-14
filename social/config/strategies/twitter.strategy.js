@@ -2,6 +2,9 @@ var passport = require('passport');
 //google strategy
 var TwitterStrategy = require('passport-twitter').Strategy;
 
+//user
+var User = require('../../models/userModel');
+
 module .exports = function () {
 
     var twitterJSON = {
@@ -15,18 +18,33 @@ module .exports = function () {
         twitterJSON,
         function(req, token, tokenSecret, profile, done) {
             
-            //add user
-            var user = {};
+            //find user in our MongoDB, or make a new one
+            var query = {
+                'twitter.id': profile.id
+            };
+            User.findOne(query, function (error, user) {
+                if (user) {
+                    console.log('found');
+                    done(null, user);
+                } else {
+                    console.log('not found');
+                    var user = new User;
+                    
+                    user.image = profile._json.profile_image_url;
+                    user.displayName = profile.displayName;
+                    
+                    //add new twitter object to user
+                    user.twitter = {};
+                    user.twitter.id = profile.id;
+                    user.twitter.token = token;
+                    
+                    //save
+                    user.save();
+                    console.log('user: ' + user);
+                    done(null, user);
+                }
+            })
 
-            user.image = profile._json.profile_image_url;
-            user.displayName = profile.displayName;
-            
-            //add new twitter object to user
-            user.twitter = {};
-            user.twitter.id = profile.id;
-            user.twitter.token = token;
-            
-            done(null, user);
         }
     ));
 }

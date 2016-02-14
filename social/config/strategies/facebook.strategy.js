@@ -2,6 +2,9 @@ var passport = require('passport');
 //google strategy
 var FacebookStrategy = require('passport-facebook').Strategy;
 
+//user
+var User = require('../../models/userModel');
+
 module .exports = function () {
 
     var facebookJSON = {
@@ -14,22 +17,35 @@ module .exports = function () {
     passport.use(new FacebookStrategy(
         facebookJSON,
         function(req, accessToken, refreshToken, profile, done) {
+           
+           //find user in our MongoDB, or make a new one 
+           var query = {
+                'facebook.id': profile.id
+            };
             
-            //add user
-            var user = {};
-            if (profile.emails) {
-                user.email = profile.emails[0].value;
-            }
-            
-            // user.image = profile._json.image.url;
-            user.displayName = profile.displayName;
-            
-            //add new facebook object to user
-            user.facebook = {};
-            user.facebook.id = profile.id;
-            user.facebook.token = accessToken;
-            
-            done(null, user);
+           User.findOne(query, function (error, user) {
+                if (user) {
+                    console.log('found');
+                    done(null, user);
+                } else {
+                    console.log('not found');
+                    var user = new User;
+
+                    if (profile.emails) {
+                        user.email = profile.emails[0].value;
+                    };
+                    user.displayName = profile.displayName;
+
+                    //add new facebook object to user
+                    user.facebook = {};
+                    user.facebook.id = profile.id;
+                    user.facebook.token = accessToken;
+                    
+                    user.save();
+                    console.log('user: ' + user);
+                    done(null, user);
+                }
+            })
         }
     ));
 }

@@ -1,6 +1,9 @@
 var passport = require('passport');
 var LinkedinStrategy = require('passport-linkedin').Strategy;
 
+//user
+var User = require('../../models/userModel');
+
 module .exports = function () {
     var githubJSON = {
         consumerKey: '77if7hyd6383e4',
@@ -12,19 +15,32 @@ module .exports = function () {
         githubJSON,
         function(token, tokenSecret, profile, done) {
             
-            //add user
-            var user = {};
-
-            // user.image = profile.photos[0].value;
-            // user.email = profile.emails[0].value;
-            user.displayName = profile.displayName;
+            //find user in our MongoDB, or make a new one
+            var query = {
+                'linkedin.id': profile.id
+            };
+            User.findOne(query, function (error, user) {
+                if (user) {
+                    console.log('found');
+                    done(null, user);
+                } else {
+                    console.log('not found');
+                    var user = new User;
+                    
+                    user.displayName = profile.displayName;
+                    
+                    //add new linkedin object to user
+                    user.linkedin = {};
+                    user.linkedin.id = profile.id;
+                    user.linkedin.token = tokenSecret;
+                    
+                    //save
+                    user.save();
+                    console.log('user: ' + user);
+                    done(null, user);
+                }
+            })
             
-            //add new linkedin object to user
-            user.linkedin = {};
-            user.linkedin.id = profile.id;
-            user.linkedin.token = tokenSecret;
-            
-            done(null, user);
         }
     ));
 }

@@ -11,9 +11,65 @@
     </head>
     
     <body>  
+        <!-- Add Main User Info -->
         <div>
             <img src="<%=user.image%>">
             <%=user.name%>
+        </div>
+        
+        <!-- Add all Social Media links, if they exist on User object -->
+        <div>
+            <ul class "social list-inline">
+            
+                <li>
+                    <a href="/auth/google" 
+                        class="<%if(user.google){%>googleplus<%}%>">
+                        Google+
+                        <!--fetch font awesome Google+ icon-->
+                        <i class="fa fa-google-plus">
+                        </i>
+                    </a>
+                </li>
+               <li>
+                    <a href="/auth/twitter" 
+                        class="<%if(user.twitter){%>twitter<%}%>">
+                        Twitter
+                        <!--fetch font awesome Twitter icon-->
+                        <i class="fa fa-twitter">
+                        </i>
+                    </a>
+               </li> 
+               <li>
+                    <a href="/auth/facebook" 
+                        class="<%if(user.facebook){%>facebook<%}%>">
+                        Facebook
+                        <!--fetch font awesome facebook icon-->
+                        <i class="fa fa-facebook">
+                        </i>
+                    </a>
+               </li>
+               
+               <li>
+                    <a href="/auth/github" 
+                        class="<%if(user.github){%>github<%}%>">
+                        GitHub
+                        <!--fetch font awesome github icon-->
+                        <i class="fa fa-github">
+                        </i>
+                    </a>
+               </li>
+               
+               <li>
+                    <a href="/auth/linkedin" 
+                        class="<%if(user.linkedin){%>linkedin<%}%>">
+                        LinkedIn
+                        <!--fetch font awesome linkedin icon-->
+                        <i class="fa fa-linkedin">
+                        </i>
+                    </a>
+               </li>
+
+            </ul>
         </div>
     </body>
 </html>

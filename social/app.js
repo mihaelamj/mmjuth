@@ -9,15 +9,20 @@ var passport = require('passport')
 //add express-session
 var session = require('express-session')
 
-
+//routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
 //add auth route
 var auth = require('./routes/auth');
 
+//db
+var mongoose = require('mongoose');
+
 //run from DEBUG=social:* npm start
 
 var app = express();
+//connect to db
+var db = mongoose.connect('mongodb://localhost/mmjsocial');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

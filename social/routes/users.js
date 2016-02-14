@@ -18,11 +18,12 @@ router.get('/', function(req, res, next) {
     //     name: req.user.displayName,
     //     image: req.user._json.image.url
     // }
-    var cleanUser = {
-        name: req.user.displayName,
-        image: req.user.image
-    }
-    res.render('users', {user : cleanUser});
+    // var cleanUser = {
+    //     name: req.user.displayName,
+    //     image: req.user.image
+    // }
+    res.render('users', {user : req.user});
+    console.log('user: ' + req.user);
 });
 
 module.exports = router;
