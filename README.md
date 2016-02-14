@@ -40,6 +40,16 @@ Playground for adding authentication to Node.js site
 * Refactor Google Strategy
 * Create user object
 
+##Adding a new Startegy
+* Install Strategy npm package passport-startegy_name
+* Make a new xxx.startegy.js module in /config/strategies/, exporting it as a function
+* Require xxx.startegy.js from passport.js (in /config)
+* Add routes to auth.js in /routes
+	* router.route('/startegy-name/callback')
+	* router.route('/startegy-name')
+* Add links to .ejs page
+
+
 ##Twitter
 * Install passport-twitter
 * Go to https://dev.twitter.com/
@@ -60,9 +70,11 @@ Playground for adding authentication to Node.js site
 ##GitHub
 * Install passport-github
 * Goto https://github.com/settings/applications/new
+* Do steps in "Adding a new Startegy"
 
 ##LinkedIn
 * Install passport-linkedin
+* Goto https://developer.linkedin.com/
 
 
 	

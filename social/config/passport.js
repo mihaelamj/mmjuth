@@ -25,5 +25,7 @@ module.exports = function(app) {
     require('./strategies/facebook.strategy')();
     //use github strategy, and execute it
     require('./strategies/github.strategy')();
+    //use linkedin strategy, and execute it
+    require('./strategies/linkedin.strategy')();
  
 }

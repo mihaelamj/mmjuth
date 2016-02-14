@@ -70,5 +70,20 @@ router.route('/github/callback')
 router.route('/github')
     .get(passport.authenticate('github'));
     
+
+//LinkedIn
+router.route('/linkedin/callback')
+    .get(passport.authenticate('linkedin', 
+            { 
+                successRedirect: '/users/',
+                failure: '/error/'
+            }
+        )
+     );
+     
+router.route('/linkedin')
+    .get(passport.authenticate('linkedin'));
+    
+    
 module.exports = router;
 
