@@ -75,6 +75,8 @@ Playground for adding authentication to Node.js site
 ##LinkedIn
 * Install passport-linkedin
 * Goto https://developer.linkedin.com/
+* Need to provide a logo, WTF??!?? Waste of my time!!
+* Do steps in "Adding a new Startegy"
 
 
 	
