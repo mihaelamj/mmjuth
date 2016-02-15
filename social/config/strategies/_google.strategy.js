@@ -7,15 +7,13 @@ var User = require('../../models/userModel');
 
 module .exports = function () {
 
-    var googleJSON = {
-        clientID: '400781816331-3uqib5crvk2adipmjdghdbjb83pepeb3.apps.googleusercontent.com',
-        clientSecret: 'bXFOmReIWvJ-EwsiZXLSTffl',
-        callbackURL: 'http://localhost:3000/auth/google/callback'
-    }
-        
     //plug it in passport
     passport.use(new GoogleStrategy(
-        googleJSON,
+        {
+            clientID: '400781816331-3uqib5crvk2adipmjdghdbjb83pepeb3.apps.googleusercontent.com',
+            clientSecret: 'bXFOmReIWvJ-EwsiZXLSTffl',
+            callbackURL: 'http://localhost:3000/auth/google/callback'
+        },
         function(req, accessToken, refreshToken, profile, done) {
             
             //find user in our MongoDB, or make a new one

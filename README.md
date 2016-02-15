@@ -92,6 +92,11 @@ Call Strategy providers
 1. Show all Startegies on User Page
 2. Fix routes to send the whole user object
 
+##My Changes
+1. Install node-uuid for unique user udid
+2. Make User's object id with udid, instead od usnf Social Service id, or use MongoDB's id
+
+
 
 
 

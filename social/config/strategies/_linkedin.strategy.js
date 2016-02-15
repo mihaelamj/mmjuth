@@ -1,23 +1,18 @@
 var passport = require('passport');
-//google strategy
-var TwitterStrategy = require('passport-twitter').Strategy;
+var LinkedinStrategy = require('passport-linkedin').Strategy;
 
 //user
 var User = require('../../models/userModel');
 
 module .exports = function () {
-
-    //make JSON
-    var twitterJSON = {
-        consumerKey: 'Vig0oCzmSc63Nm7ipG8XtdDxL',
-        consumerSecret: 'TzJBNfXL5UzbOhLITHd0fg5l4Y9AbMHZUhIgh7EbEEE2YlfpZV',
-        callbackURL: 'http://localhost:3000/auth/twitter/callback',
-        passReqToCallback: true   
+    var githubJSON = {
+        consumerKey: '77if7hyd6383e4',
+        consumerSecret: 'N4iGbeQ7YJc6nDYL',
+        callbackURL: 'http://localhost:3000/auth/linkedin/callback'
     }
-    
     //plug it in passport
-    passport.use(new TwitterStrategy(
-        twitterJSON,
+    passport.use(new LinkedinStrategy(
+        githubJSON,
         function(req, token, tokenSecret, profile, done) {
             
             //if we have a user in req
@@ -26,43 +21,44 @@ module .exports = function () {
                 //find user
                 var query = {};
                 
-                //query strategies
                 if (req.user.google) {
                     query = {
                         'google.id': req.user.google.id
                     };
-                } else if(req.user.facebook) {
+                } else if(req.user.twitter) {
+                    query = {
+                        'twitter.id': req.user.twitter.id
+                    };
+                } else if (req.user.facebook) {
                     query = {
                         'facebook.id': req.user.facebook.id
                     };
-                } else if (req.user.github) {
+                } else if(req.user.github) {
                     query = {
                         'github.id': req.user.github.id
                     };
-                } else if(req.user.linkedin) {
-                    query = {
-                        'linkedin.id': req.user.linkedin.id
-                    };
                 }
                 
-                //patch the twitter user
+                //patch linkedin user
                  User.findOne(query, function (error, user) {
                     console.log(error);
                     console.log('user');
                     if (user) {
-                        user.twitter = {};
-                        user.twitter.id = profile.id;
-                        user.twitter.token = token;
-                        user.twitter.tokenSecret = tokenSecret;
+                        //add new linkedin object to user
+                        user.linkedin = {};
+                        user.linkedin.id = profile.id;
+                        user.linkedin.token = tokenSecret;
+
                         user.save();
                         done(null, user);
                     }
-                })
-                
+                })                 
+                 
+                 
              } else {
-                //else find user in our MongoDB, or make a new one
+                //find user in our MongoDB, or make a new one
                 var query = {
-                    'twitter.id': profile.id
+                    'linkedin.id': profile.id
                 };
                 User.findOne(query, function (error, user) {
                     if (user) {
@@ -72,22 +68,23 @@ module .exports = function () {
                         console.log('not found');
                         var user = new User;
                         
-                        user.image = profile._json.profile_image_url;
                         user.displayName = profile.displayName;
                         
-                        //add new twitter object to user
-                        user.twitter = {};
-                        user.twitter.id = profile.id;
-                        user.twitter.token = token;
-                        user.twitter.tokenSecret = tokenSecret;
-                         
+                        //add new linkedin object to user
+                        user.linkedin = {};
+                        user.linkedin.id = profile.id;
+                        user.linkedin.token = tokenSecret;
+                        
                         //save
                         user.save();
                         console.log('user: ' + user);
                         done(null, user);
                     }
-                })                 
+                })
              }
+            
+
+            
         }
     ));
 }

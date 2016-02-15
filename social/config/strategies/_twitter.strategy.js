@@ -7,14 +7,12 @@ var User = require('../../models/userModel');
 
 module .exports = function () {
 
-    //make JSON
     var twitterJSON = {
         consumerKey: 'Vig0oCzmSc63Nm7ipG8XtdDxL',
         consumerSecret: 'TzJBNfXL5UzbOhLITHd0fg5l4Y9AbMHZUhIgh7EbEEE2YlfpZV',
         callbackURL: 'http://localhost:3000/auth/twitter/callback',
         passReqToCallback: true   
     }
-    
     //plug it in passport
     passport.use(new TwitterStrategy(
         twitterJSON,

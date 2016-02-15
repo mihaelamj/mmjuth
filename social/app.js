@@ -22,7 +22,7 @@ var mongoose = require('mongoose');
 
 var app = express();
 //connect to db
-var db = mongoose.connect('mongodb://localhost/mmjsocial');
+var db = mongoose.connect('mongodb://localhost/mmjsocial1');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

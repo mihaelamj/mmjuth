@@ -1,24 +1,19 @@
 var passport = require('passport');
-//google strategy
-var TwitterStrategy = require('passport-twitter').Strategy;
+var GithubStrategy = require('passport-github').Strategy;
 
 //user
 var User = require('../../models/userModel');
 
 module .exports = function () {
-
-    //make JSON
-    var twitterJSON = {
-        consumerKey: 'Vig0oCzmSc63Nm7ipG8XtdDxL',
-        consumerSecret: 'TzJBNfXL5UzbOhLITHd0fg5l4Y9AbMHZUhIgh7EbEEE2YlfpZV',
-        callbackURL: 'http://localhost:3000/auth/twitter/callback',
-        passReqToCallback: true   
+    var githubJSON = {
+        clientID: 'eb52784da6a2dca841e2',
+        clientSecret: '90b50792b4b56f7f0ff5b224880782226465484a',
+        callbackURL: 'http://localhost:3000/auth/github/callback'
     }
-    
     //plug it in passport
-    passport.use(new TwitterStrategy(
-        twitterJSON,
-        function(req, token, tokenSecret, profile, done) {
+    passport.use(new GithubStrategy(
+        githubJSON,
+        function(req, accessToken, refreshToken, profile, done) {
             
             //if we have a user in req
              if (req.user) {
@@ -26,18 +21,17 @@ module .exports = function () {
                 //find user
                 var query = {};
                 
-                //query strategies
                 if (req.user.google) {
                     query = {
                         'google.id': req.user.google.id
                     };
-                } else if(req.user.facebook) {
+                } else if(req.user.twitter) {
+                    query = {
+                        'twitter.id': req.user.twitter.id
+                    };
+                } else if (req.user.facebook) {
                     query = {
                         'facebook.id': req.user.facebook.id
-                    };
-                } else if (req.user.github) {
-                    query = {
-                        'github.id': req.user.github.id
                     };
                 } else if(req.user.linkedin) {
                     query = {
@@ -45,24 +39,26 @@ module .exports = function () {
                     };
                 }
                 
-                //patch the twitter user
+                //patch github user
                  User.findOne(query, function (error, user) {
                     console.log(error);
                     console.log('user');
                     if (user) {
-                        user.twitter = {};
-                        user.twitter.id = profile.id;
-                        user.twitter.token = token;
-                        user.twitter.tokenSecret = tokenSecret;
+                        //add new github object to user
+                        user.github = {};
+                        user.github.id = profile.id;
+                        user.github.token = accessToken;
+
                         user.save();
                         done(null, user);
                     }
-                })
-                
+                })                 
+                 
+                 
              } else {
-                //else find user in our MongoDB, or make a new one
+                //find user in our MongoDB, or make a new one
                 var query = {
-                    'twitter.id': profile.id
+                    'github.id': profile.id
                 };
                 User.findOne(query, function (error, user) {
                     if (user) {
@@ -72,22 +68,23 @@ module .exports = function () {
                         console.log('not found');
                         var user = new User;
                         
-                        user.image = profile._json.profile_image_url;
+                        user.image = profile.photos[0].value;
+                        user.email = profile.emails[0].value;
                         user.displayName = profile.displayName;
                         
-                        //add new twitter object to user
-                        user.twitter = {};
-                        user.twitter.id = profile.id;
-                        user.twitter.token = token;
-                        user.twitter.tokenSecret = tokenSecret;
-                         
+                        //add new github object to user
+                        user.github = {};
+                        user.github.id = profile.id;
+                        user.github.token = accessToken;
+                        
                         //save
                         user.save();
                         console.log('user: ' + user);
                         done(null, user);
                     }
-                })                 
+                })
              }
+
         }
     ));
 }

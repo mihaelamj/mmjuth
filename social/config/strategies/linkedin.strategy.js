@@ -5,11 +5,14 @@ var LinkedinStrategy = require('passport-linkedin').Strategy;
 var User = require('../../models/userModel');
 
 module .exports = function () {
+    
+    //make JSON
     var githubJSON = {
         consumerKey: '77if7hyd6383e4',
         consumerSecret: 'N4iGbeQ7YJc6nDYL',
         callbackURL: 'http://localhost:3000/auth/linkedin/callback'
     }
+    
     //plug it in passport
     passport.use(new LinkedinStrategy(
         githubJSON,

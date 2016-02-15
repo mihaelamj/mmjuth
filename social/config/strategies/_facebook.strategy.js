@@ -3,9 +3,18 @@ var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 
 //user
-var User = require('../../models/userModel');
+var User = require('../../models/_userModel');
+
+//util
+var utilStartegy = require('./util.strategy.js');
 
 module .exports = function () {
+    
+    var updateUser = function(user, id, token) {
+        user.facebook = {};
+        user.facebook.id = id;
+        user.facebook.token = token;
+    };
 
     var facebookJSON = {
         clientID: '1702353246700032',
@@ -13,14 +22,14 @@ module .exports = function () {
         callbackURL: 'http://localhost:3000/auth/facebook/callback',
         passReqToCallback: true   
     }
-   
-    //helper
-    
-    
     //plug it in passport
     passport.use(new FacebookStrategy(
         facebookJSON,
         function(req, accessToken, refreshToken, profile, done) {
+            
+            utilStartegy.handleUser(err, 'facebook', req, function(user) {
+                
+            });
             
             //if we have a user in req
              if (req.user) {
@@ -51,9 +60,11 @@ module .exports = function () {
                     console.log(error);
                     console.log('user');
                     if (user) {
-                        user.facebook = {};
-                        user.facebook.id = profile.id;
-                        user.facebook.token = accessToken;
+                        
+                        updateUser(user, profile.id, accessToken);
+                        // user.facebook = {};
+                        // user.facebook.id = profile.id;
+                        // user.facebook.token = accessToken;
 
                         user.save();
                         done(null, user);
@@ -82,9 +93,10 @@ module .exports = function () {
                             user.displayName = profile.displayName;
 
                             //add new facebook object to user
-                            user.facebook = {};
-                            user.facebook.id = profile.id;
-                            user.facebook.token = accessToken;
+                            updateUser(user, profile.id, accessToken);
+                            // user.facebook = {};
+                            // user.facebook.id = profile.id;
+                            // user.facebook.token = accessToken;
                             
                             user.save();
                             console.log('user: ' + user);

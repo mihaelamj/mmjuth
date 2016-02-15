@@ -5,11 +5,14 @@ var GithubStrategy = require('passport-github').Strategy;
 var User = require('../../models/userModel');
 
 module .exports = function () {
+    
+    //make JSON
     var githubJSON = {
         clientID: 'eb52784da6a2dca841e2',
         clientSecret: '90b50792b4b56f7f0ff5b224880782226465484a',
         callbackURL: 'http://localhost:3000/auth/github/callback'
     }
+    
     //plug it in passport
     passport.use(new GithubStrategy(
         githubJSON,
