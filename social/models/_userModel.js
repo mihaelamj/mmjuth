@@ -13,8 +13,7 @@ var StrategyModel = new Schema({
     },
     tokenSecret: {
         type: String
-    },
-       
+    }
 });
 
 var userModel = new Schema({

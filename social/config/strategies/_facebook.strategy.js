@@ -6,7 +6,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var User = require('../../models/_userModel');
 
 //util
-var utilStartegy = require('./util.strategy.js');
+var util = require('./util.strategy.js');
 
 module .exports = function () {
     
@@ -16,21 +16,33 @@ module .exports = function () {
         user.facebook.token = token;
     };
 
-    var facebookJSON = {
-        clientID: '1702353246700032',
-        clientSecret: '95458f618ba46379e8bd296c0a66c9bd',
-        callbackURL: 'http://localhost:3000/auth/facebook/callback',
-        passReqToCallback: true   
-    }
+    
+    var facebookJSON = util.strategyJSONParams('facebook');
     //plug it in passport
     passport.use(new FacebookStrategy(
         facebookJSON,
         function(req, accessToken, refreshToken, profile, done) {
             
-            utilStartegy.handleUser(err, 'facebook', req, function(user) {
-                
-            });
+            //init params
+            var email = '';
+            var displayName = '';
+            var image = '';
+            var strategyID = ''; 
+            var strategyToken = '';
+            var strategyTokenSecret = '';
             
+            //fetch params
+            if (profile.emails) {
+                email = profile.emails[0].value;
+            };
+            displayName = profile.displayName;
+            strategyID = profile.id;
+            strategyToken = accessToken;
+            
+            var user = util.findRequestUser(req);
+            if (user) {
+                
+            }
             //if we have a user in req
              if (req.user) {
                  
@@ -62,9 +74,6 @@ module .exports = function () {
                     if (user) {
                         
                         updateUser(user, profile.id, accessToken);
-                        // user.facebook = {};
-                        // user.facebook.id = profile.id;
-                        // user.facebook.token = accessToken;
 
                         user.save();
                         done(null, user);
@@ -94,9 +103,6 @@ module .exports = function () {
 
                             //add new facebook object to user
                             updateUser(user, profile.id, accessToken);
-                            // user.facebook = {};
-                            // user.facebook.id = profile.id;
-                            // user.facebook.token = accessToken;
                             
                             user.save();
                             console.log('user: ' + user);
